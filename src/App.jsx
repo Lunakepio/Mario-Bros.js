@@ -2,6 +2,8 @@ import { KeyboardControls, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React, { useRef, useEffect, Suspense, useMemo } from "react";
 import { Experience } from "./Experience";
+import { Physics } from "@react-three/rapier";
+import { useStore } from "./store";
 
 export const Controls = {
   left: "left",
@@ -19,13 +21,17 @@ function App() {
     []
   );
 
+  const { gravity } = useStore();
+
   return (
     <>
       <div className="canvas-container">
         <KeyboardControls map={map}>
           <Canvas>
             <Suspense fallback={null}>
-              <Experience />
+              <Physics gravity={[0,-gravity, 0]}>
+                <Experience />
+              </Physics>
             </Suspense>
           </Canvas>
         </KeyboardControls>

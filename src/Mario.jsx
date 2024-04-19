@@ -7,20 +7,40 @@ Source: https://sketchfab.com/3d-models/mario-0254649f5b0047f5875749b7c6fd65f5
 Title: Mario
 */
 
-import React, { useRef, useEffect } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import React, { useRef, useEffect } from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 
-export function Model({animation}) {
-  const group = useRef()
-  const { nodes, materials, animations } = useGLTF('/mario.glb')
-  const { actions } = useAnimations(animations, group)
+export function Model({ animation, rotation }) {
+  const group = useRef();
+  const { nodes, materials, animations } = useGLTF("/mario.glb");
+  const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
-    actions[animation]?.reset().fadeIn(0.1).play();
+    actions[animation]?.reset().fadeIn(0.3).play();
     return () => actions[animation]?.fadeOut(0.1);
   }, [animation]);
+
+  useGSAP(() => {
+    console.log(rotation);
+    if (rotation === "left") {
+      gsap.to(group.current.rotation, {
+        y: Math.PI,
+        duration: 0.3,
+        ease: "expo.inOut",
+      });
+    } else {
+      gsap.to(group.current.rotation, {
+        y: 0,
+        duration: 0.3,
+        ease: "expo.inOut",
+      });
+    }
+  }, [rotation]);
+
   return (
-    <group ref={group} dispose={null} scale={1.5}>
+    <group ref={group} dispose={null} scale={1.4} position={[0, -1, 0]}>
       <group name="Sketchfab_Scene">
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
           <group name="fbx_mergefbx" rotation={[Math.PI / 2, 0, 0]}>
@@ -30,10 +50,23 @@ export function Model({animation}) {
                   <primitive object={nodes._rootJoint} />
                   <group name="Object_6" position={[0, 0.753, 0.034]} />
                   <group name="mario_obj">
-                    <group name="polygon1_polygon1" position={[0, 0.753, 0.034]} />
+                    <group
+                      name="polygon1_polygon1"
+                      position={[0, 0.753, 0.034]}
+                    />
                   </group>
-                  <skinnedMesh name="Object_7" geometry={nodes.Object_7.geometry} material={materials['mario_eye_tx.001']} skeleton={nodes.Object_7.skeleton} />
-                  <skinnedMesh name="Object_8" geometry={nodes.Object_8.geometry} material={materials['mario_all_tx.001']} skeleton={nodes.Object_8.skeleton} />
+                  <skinnedMesh
+                    name="Object_7"
+                    geometry={nodes.Object_7.geometry}
+                    material={materials["mario_eye_tx.001"]}
+                    skeleton={nodes.Object_7.skeleton}
+                  />
+                  <skinnedMesh
+                    name="Object_8"
+                    geometry={nodes.Object_8.geometry}
+                    material={materials["mario_all_tx.001"]}
+                    skeleton={nodes.Object_8.skeleton}
+                  />
                 </group>
               </group>
             </group>
@@ -41,7 +74,7 @@ export function Model({animation}) {
         </group>
       </group>
     </group>
-  )
+  );
 }
 
-useGLTF.preload('/mario.glb')
+useGLTF.preload("/mario.glb");
