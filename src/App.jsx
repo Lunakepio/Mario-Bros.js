@@ -9,6 +9,7 @@ export const Controls = {
   left: "left",
   right: "right",
   jump: "jump",
+  run: "run",
 };
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       { name: Controls.left, keys: ["ArrowLeft", "KeyA"] },
       { name: Controls.right, keys: ["ArrowRight", "KeyD"] },
       { name: Controls.jump, keys: ["Space"] },
+      { name: Controls.run, keys: ["ShiftLeft", "ShiftRight"]},
     ],
     []
   );
@@ -29,7 +31,7 @@ function App() {
         <KeyboardControls map={map}>
           <Canvas>
             <Suspense fallback={null}>
-              <Physics gravity={[0,-gravity, 0]}>
+              <Physics gravity={[0,-gravity, 0]} timeStep={"vary"}>
                 <Experience />
               </Physics>
             </Suspense>

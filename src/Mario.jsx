@@ -19,21 +19,22 @@ export function Model({ animation, rotation }) {
 
   useEffect(() => {
     actions[animation]?.reset().fadeIn(0.3).play();
+    actions[animation].setEffectiveTimeScale(3);
     return () => actions[animation]?.fadeOut(0.1);
   }, [animation]);
 
   useGSAP(() => {
-    console.log(rotation);
+    // console.log(rotation);
     if (rotation === "left") {
       gsap.to(group.current.rotation, {
         y: Math.PI,
-        duration: 0.3,
+        duration: 0.4,
         ease: "expo.inOut",
       });
     } else {
       gsap.to(group.current.rotation, {
         y: 0,
-        duration: 0.3,
+        duration: 0.4,
         ease: "expo.inOut",
       });
     }
