@@ -6,7 +6,7 @@ import {
   PerspectiveCamera,
   useKeyboardControls,
 } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Model } from "./Mario";
@@ -27,6 +27,7 @@ export const Experience = () => {
   const rb = useRef();
   const [rotation, setRotation] = useState("right");
   const front = useRef();
+  const { size } = useThree();
 
   const maxSpeed = 15;
   const jump_force = 16;
@@ -42,6 +43,22 @@ export const Experience = () => {
   const { setGravity, gravity } = useStore();
 
   const previousRotation = useRef("right");
+
+  useEffect(() => {
+    if (camera.current) {
+      const aspect = size.width / size.height;
+      const zoomLevel = 10;  // This can be adjusted based on your preference
+
+      camera.current.left = -zoomLevel * aspect;
+      camera.current.right = zoomLevel * aspect;
+      camera.current.top = zoomLevel;
+      camera.current.bottom = -zoomLevel;
+
+      camera.current.updateProjectionMatrix();  // Important to update the camera after changing properties
+    }
+  }, [size.width, size.height]);
+
+  
   useFrame((state, delta) => {
     const time = state.clock.getElapsedTime();
     const character = groupRef.current;
@@ -127,7 +144,7 @@ export const Experience = () => {
     }
     camera.current.position.z = MathUtils.lerp(
       camera.current.position.z,
-      rb.current.translation().z,
+      rb.current.translation().z + 5,
       0.1
     );
 
@@ -138,6 +155,8 @@ export const Experience = () => {
     // });
 
     plane.current.position.z = rb.current.translation().z;
+    rb.current.setTranslation({ x: 0, y: rb.current.translation().y, z: rb.current.translation().z });
+    console.log(rb.current.translation());
   });
 
   return (
@@ -192,10 +211,6 @@ export const Experience = () => {
         position={[-10, 10, 0]}
         near={0.1}
         far={1000}
-        left={-10}
-        right={10}
-        top={10}
-        bottom={-10}
         makeDefault
         ref={camera}
         rotation={[0, -PI / 2, 0]}

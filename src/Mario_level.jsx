@@ -18,7 +18,7 @@ export function Level(props) {
       <group scale={0.01}>
         <group scale={100}>
         
-        <RigidBody colliders="trimesh" type="fixed" name={"ground"}>
+        <RigidBody colliders="trimesh" type="fixed" name={"ground"} friction={0}>
 
         <mesh geometry={nodes.nes_bldg_smb11_zeimport_poly_XSIPOLYCLSunderground1_0.geometry} material={materials['zeimport_poly_XSIPOLYCLS.underground1']} />
           <mesh geometry={nodes.nes_bldg_smb11_zeimport_poly1_XSIPOLYCLSqblock_0.geometry} material={materials['zeimport_poly1_XSIPOLYCLS.qblock']} />
@@ -29,7 +29,7 @@ export function Level(props) {
           <RigidBody colliders="trimesh" type="fixed" friction={5} name={"ground"}>
           <mesh geometry={nodes.nes_bldg_smb11_zeimport_poly5_XSIPOLYCLSground1_0.geometry} material={materials.material_0} />
           </RigidBody>
-          <RigidBody colliders="trimesh" type="fixed" name={"ground"}>
+          <RigidBody colliders="trimesh" type="fixed" name={"ground"} friction={0}>
           <mesh geometry={nodes.nes_bldg_smb11_zeimport_poly6_XSIPOLYCLSflagblock_0.geometry} material={materials['zeimport_poly6_XSIPOLYCLS.flagblock']} />
           <mesh geometry={nodes.nes_bldg_smb11_zeimport_poly8_XSIPOLYCLSbrick1_0.geometry} material={materials['zeimport_poly8_XSIPOLYCLS.brick1']} />
           <mesh geometry={nodes.nes_bldg_smb11_zeimport_poly9_XSIPOLYCLSbrick1_0.geometry} material={materials['zeimport_poly9_XSIPOLYCLS.brick1']} />

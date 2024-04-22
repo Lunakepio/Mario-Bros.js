@@ -18,9 +18,9 @@ export function Model({ animation, rotation }) {
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
-    actions[animation]?.reset().fadeIn(0.3).play();
+    actions[animation]?.reset().fadeIn(0.2).play();
     actions[animation].setEffectiveTimeScale(3);
-    return () => actions[animation]?.fadeOut(0.1);
+    return () => actions[animation]?.fadeOut(0.2);
   }, [animation]);
 
   useGSAP(() => {
