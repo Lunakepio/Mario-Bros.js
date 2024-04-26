@@ -4,6 +4,7 @@ import {
   OrbitControls,
   OrthographicCamera,
   PerspectiveCamera,
+  Stats,
   useKeyboardControls,
 } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -12,10 +13,11 @@ import gsap from "gsap";
 import { Model } from "./Mario";
 import { Level } from "./Mario_level";
 import { Controls } from "./App";
-import { CapsuleCollider, RigidBody } from "@react-three/rapier";
+import { CapsuleCollider, RigidBody, vec3 } from "@react-three/rapier";
 import { MathUtils, Vector3 } from "three";
 import { max } from "three/examples/jsm/nodes/Nodes.js";
 import { useStore } from "./store";
+import { Player } from "./Player";
 export const Experience = () => {
   const meshRef = useRef();
   const PI = Math.PI;
@@ -30,7 +32,7 @@ export const Experience = () => {
   const { size } = useThree();
 
   const maxSpeed = 15;
-  const jump_force = 16;
+  const jump_force = 14;
   const jumpDuration = 0.3;
 
   const inTheAir = useRef();
@@ -67,7 +69,7 @@ export const Experience = () => {
     const jump = get()[Controls.jump];
     const run = get()[Controls.run];
 
-    setAnimation("mixamo.com");
+    setAnimation("idle");
 
     const curVel = rb.current.linvel();
     vel.x = 0;
@@ -91,17 +93,17 @@ export const Experience = () => {
     // console.log(speed.current)
     if (goLeft) {
       setRotation("left");
-      setAnimation("Walk");
+      setAnimation("walk");
       
       if (run) {
-        setAnimation("Run");
+        setAnimation("run");
       }
     }
     if (goRight) {
       setRotation("right");
-      setAnimation("Walk");
+      setAnimation("walk");
       if (run) {
-        setAnimation("Run");
+        setAnimation("run");
       }
     }
 
@@ -129,10 +131,11 @@ export const Experience = () => {
     }
 
     if (inTheAir.current && !landed.current) {
-      setAnimation("Jump");
+      setAnimation("jump");
 
       if (vel.y < 0) {
         setGravity(100);
+        setAnimation("fall");
       }
     } else if (vel.y === 0) {
       setGravity(90);
@@ -156,7 +159,6 @@ export const Experience = () => {
 
     plane.current.position.z = rb.current.translation().z;
     rb.current.setTranslation({ x: 0, y: rb.current.translation().y, z: rb.current.translation().z });
-    console.log(rb.current.translation());
   });
 
   return (
@@ -181,7 +183,8 @@ export const Experience = () => {
         }}
       >
         <group ref={groupRef} position={[0, 10, 0]}>
-          <Model animation={animation} rotation={rotation} />
+          {/* <Model animation={animation} rotation={rotation} /> */}
+          <Player animation={animation} rotation={rotation} />
           <CapsuleCollider args={[0.5, 0.5]} />
         </group>
       </RigidBody>
@@ -231,6 +234,7 @@ export const Experience = () => {
       {/* <OrbitControls /> */}
 
       <Environment preset="forest" />
+      <Stats/>
     </>
   );
 };

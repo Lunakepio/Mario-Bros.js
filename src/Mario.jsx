@@ -19,7 +19,7 @@ export function Model({ animation, rotation }) {
 
   useEffect(() => {
     actions[animation]?.reset().fadeIn(0.2).play();
-    actions[animation].setEffectiveTimeScale(3);
+    actions[animation]?.setEffectiveTimeScale(3);
     return () => actions[animation]?.fadeOut(0.2);
   }, [animation]);
 
