@@ -15,16 +15,17 @@ export function Player({ animation, rotation}) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF('/Player.glb')
   const { actions } = useAnimations(animations, group)
-  const timeScale = useRef(2)
+  const timeScale = useRef(5)
 
   
   useEffect(() => {
-    if (animation === "run") {
+    console.log(timeScale.current);
+    if (animation !== "run" && animation !== "walk") {
+      timeScale.current = 1;
+    } else {
       timeScale.current = 5;
     }
-
-    
-    
+  
     actions[animation]?.reset().fadeIn(0.2).play();
     actions[animation]?.setEffectiveTimeScale(timeScale.current);
     return () => actions[animation]?.fadeOut(0.2);
@@ -35,20 +36,20 @@ export function Player({ animation, rotation}) {
     if (rotation === "left") {
       gsap.to(group.current.rotation, {
         y: Math.PI,
-        duration: 0.4,
+        duration: 0.3,
         ease: "expo.inOut",
       });
     } else {
       gsap.to(group.current.rotation, {
         y: 0,
-        duration: 0.4,
+        duration: 0.3,
         ease: "expo.inOut",
       });
     }
   }, [rotation]);
   return (
     <group ref={group} dispose={null}>
-      <group name="Player" position={[0,-1, 0]}>
+      <group name="Player" position={[0,-.7, 0]}>
         <group name="Player_1">
           <group name="Mario">
             <group name="AllRoot">

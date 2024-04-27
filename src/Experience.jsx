@@ -8,14 +8,11 @@ import {
   useKeyboardControls,
 } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { Model } from "./Mario";
+
 import { Level } from "./Mario_level";
 import { Controls } from "./App";
 import { CapsuleCollider, RigidBody, vec3 } from "@react-three/rapier";
 import { MathUtils, Vector3 } from "three";
-import { max } from "three/examples/jsm/nodes/Nodes.js";
 import { useStore } from "./store";
 import { Player } from "./Player";
 export const Experience = () => {
@@ -32,7 +29,7 @@ export const Experience = () => {
   const { size } = useThree();
 
   const maxSpeed = 15;
-  const jump_force = 14;
+  const jump_force = 12;
   const jumpDuration = 0.3;
 
   const inTheAir = useRef();
@@ -134,7 +131,7 @@ export const Experience = () => {
       setAnimation("jump");
 
       if (vel.y < 0) {
-        setGravity(100);
+        setGravity(95);
         setAnimation("fall");
       }
     } else if (vel.y === 0) {
@@ -151,11 +148,7 @@ export const Experience = () => {
       0.1
     );
 
-    // front.current.setTranslation({
-    //   x: rb.current.translation().x,
-    //   y: rb.current.translation().y + 10,
-    //   z: rb.current.translation().z + (rotation === "left" ? -1.2 : 1.2),
-    // });
+
 
     plane.current.position.z = rb.current.translation().z;
     rb.current.setTranslation({ x: 0, y: rb.current.translation().y, z: rb.current.translation().z });
@@ -183,9 +176,8 @@ export const Experience = () => {
         }}
       >
         <group ref={groupRef} position={[0, 10, 0]}>
-          {/* <Model animation={animation} rotation={rotation} /> */}
           <Player animation={animation} rotation={rotation} />
-          <CapsuleCollider args={[0.5, 0.5]} />
+          <CapsuleCollider args={[0.4, 0.3]} />
         </group>
       </RigidBody>
       {/* <RigidBody
