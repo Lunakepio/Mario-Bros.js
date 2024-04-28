@@ -9,12 +9,12 @@ import {
 } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
-import { Level } from "./Mario_level";
 import { Controls } from "./App";
 import { CapsuleCollider, RigidBody, vec3 } from "@react-three/rapier";
 import { MathUtils, Vector3 } from "three";
 import { useStore } from "./store";
 import { Player } from "./Player";
+import { LevelTest } from "./LevelTest";
 export const Experience = () => {
   const meshRef = useRef();
   const PI = Math.PI;
@@ -46,18 +46,17 @@ export const Experience = () => {
   useEffect(() => {
     if (camera.current) {
       const aspect = size.width / size.height;
-      const zoomLevel = 10;  // This can be adjusted based on your preference
+      const zoomLevel = 10; // This can be adjusted based on your preference
 
       camera.current.left = -zoomLevel * aspect;
       camera.current.right = zoomLevel * aspect;
       camera.current.top = zoomLevel;
       camera.current.bottom = -zoomLevel;
 
-      camera.current.updateProjectionMatrix();  // Important to update the camera after changing properties
+      camera.current.updateProjectionMatrix(); // Important to update the camera after changing properties
     }
   }, [size.width, size.height]);
 
-  
   useFrame((state, delta) => {
     const time = state.clock.getElapsedTime();
     const character = groupRef.current;
@@ -77,21 +76,26 @@ export const Experience = () => {
       speed.current = MathUtils.lerp(
         speed.current,
         run ? maxSpeed : maxSpeed / 2,
-        0.05
+        0.03
       );
-      if ((goLeft && previousRotation.current === "right") || (goRight && previousRotation.current === "left")) {
+      if (
+        (goLeft && previousRotation.current === "right") ||
+        (goRight && previousRotation.current === "left")
+      ) {
         speed.current = 0;
-        previousRotation.current = rotation
+        previousRotation.current = rotation;
       }
     } else {
-      speed.current = MathUtils.lerp(speed.current, 0, 0.05);
+      if (!inTheAir.current) {
+        speed.current = MathUtils.lerp(speed.current, 0, 0.05);
+      }
     }
 
     // console.log(speed.current)
     if (goLeft) {
       setRotation("left");
       setAnimation("walk");
-      
+
       if (run) {
         setAnimation("run");
       }
@@ -114,16 +118,16 @@ export const Experience = () => {
     if (jump && jumpTime.current < jumpDuration) {
       inTheAir.current = true;
       landed.current = false;
-      vel.y = jump_force + Math.abs(vel.z) * 0.3;
+      vel.y = jump_force + Math.abs(vel.z) * 0.2;
       jumpIsHeld.current = true;
-      jumpTime.current += delta
+      jumpTime.current += delta;
     }
 
-    if (!jump) {
+    if (!jump && landed.current && !inTheAir.current) {
       jumpIsHeld.current = false;
     }
 
-    if(!jumpIsHeld.current && landed.current && !inTheAir.current){
+    if (!jumpIsHeld.current && landed.current && !inTheAir.current) {
       jumpTime.current = 0;
     }
 
@@ -144,14 +148,22 @@ export const Experience = () => {
     }
     camera.current.position.z = MathUtils.lerp(
       camera.current.position.z,
-      rb.current.translation().z + 5,
-      0.1
+      rb.current.translation().z + 7,
+      0.04
     );
 
-
-
     plane.current.position.z = rb.current.translation().z;
-    rb.current.setTranslation({ x: 0, y: rb.current.translation().y, z: rb.current.translation().z });
+    rb.current.setTranslation({
+      x: 0,
+      y: rb.current.translation().y,
+      z: rb.current.translation().z,
+    });
+    // front.current.setTranslation({
+    //   x: 0,
+    //   y: rb.current.translation().y + 10.5,
+    //   z: rb.current.translation().z,
+
+    // });
   });
 
   return (
@@ -162,17 +174,15 @@ export const Experience = () => {
         ref={rb}
         enabledRotations={[false, false, false]}
         canSleep={false}
-        friction={0}
         ccd
+        name="player"
         onCollisionEnter={(e) => {
-          if (e.other.rigidBodyObject.name === "ground") {
-            inTheAir.current = false;
-            landed.current = true;
+          inTheAir.current = false;
+          landed.current = true;
 
-            const curVel = rb.current.linvel();
-            curVel.y = 0;
-            rb.current.setLinvel(curVel);
-          }
+          const curVel = rb.current.linvel();
+          curVel.y = 0;
+          rb.current.setLinvel(curVel);
         }}
       >
         <group ref={groupRef} position={[0, 10, 0]}>
@@ -180,23 +190,6 @@ export const Experience = () => {
           <CapsuleCollider args={[0.4, 0.3]} />
         </group>
       </RigidBody>
-      {/* <RigidBody
-        type="fixed"
-        sensor
-        enabledRotations={[false, false, false]}
-        colliders={false}
-        name="arms"
-        ref={front}
-        onIntersectionEnter={(e) => {
-          console.log(e);
-        }}
-      >
-        <mesh>
-          <boxGeometry args={[0.5, 0.5, 0.5]} />
-          <meshBasicMaterial color="red" />
-        </mesh>
-        <CapsuleCollider args={[0.5, 0.5]} />
-      </RigidBody> */}
 
       <mesh ref={plane} rotation={[0, -PI / 2, 0]} position={[10, 0, 0]}>
         <planeGeometry args={[100, 100]} />
@@ -220,13 +213,13 @@ export const Experience = () => {
         makeDefault
         ref={camera}
       /> */}
-      <Level />
+      <LevelTest />
       <ambientLight intensity={1} />
       <pointLight position={[2, 2, 2]} intensity={50}></pointLight>
       {/* <OrbitControls /> */}
 
-      <Environment preset="forest" />
-      <Stats/>
+      <Environment preset="city" />
+      <Stats />
     </>
   );
 };
