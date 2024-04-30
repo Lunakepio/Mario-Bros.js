@@ -130,7 +130,7 @@ export function LevelTest() {
           material={materials.BlockBrickMat00}
           pos={[71.589, 9.139, 0]}
         />
-        <RigidBody colliders="trimesh" type="fixed" name={"ground"} friction={5}>
+        <RigidBody colliders="hull" type="fixed" name={"pipe"} friction={0}>
         <group position={[-36.392, 2.613, 0]}>
           <mesh
             geometry={nodes.Dokan__DokanMat00.geometry}
@@ -220,7 +220,7 @@ export function LevelTest() {
           rotation={[-Math.PI / 2, 0, Math.PI / 2]}
           scale={2.207}
         >
-          <group rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
+          <group rotation={[Math.PI / 2, 0, 0]} scale={0.008}>
             <mesh
               geometry={nodes.Base_Material_0.geometry}
               material={materials["Material.001"]}

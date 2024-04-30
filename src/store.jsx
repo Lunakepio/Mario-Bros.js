@@ -7,4 +7,6 @@ export const useStore = create((set) => ({
   setNodes: (nodes) => set({ nodes }),
   materials: null,
   setMaterials: (materials) => set({ materials }),
+  shoes: null,
+  setShoes: (shoes) => set({ shoes }),
 }));

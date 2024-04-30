@@ -56,7 +56,6 @@ export const QuestionBlock = ({ pos }) => {
       
     </RigidBody>
     <RigidBody type="fixed" sensor position={pos} onIntersectionEnter={(e) => {
-      console.log(e.other.rigidBodyObject.name)
       setIsHit(true);
     }}>
     <mesh>

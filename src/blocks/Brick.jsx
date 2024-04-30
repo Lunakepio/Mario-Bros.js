@@ -26,7 +26,6 @@ export const Brick = ({ pos, geometry, material }) => {
         sensor
         position={pos}
         onIntersectionEnter={(e) => {
-          console.log(e.other.rigidBodyObject.name);
           setIsHit(true);
           group.current.visible = false;
             setShowEmptyBlock(true);
