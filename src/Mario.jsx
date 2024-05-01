@@ -6,6 +6,7 @@ import {
   PerspectiveCamera,
   Stats,
   useKeyboardControls,
+  PositionalAudio
 } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
@@ -41,7 +42,10 @@ export const Mario = () => {
   const jumpIsHeld = useRef();
   const speed = useRef(0);
   const jumpTime = useRef(0);
-
+  const [playerMushroom, setPlayerMushroom] = useState(false);
+  const [alive, setAlive] = useState(true);
+  const jumpSound = useRef();
+  const stepSound = useRef();
   const { setGravity, gravity, setShoes } = useStore();
 
   const previousRotation = useRef("right");
@@ -74,6 +78,11 @@ export const Mario = () => {
     const goRight = get()[Controls.right];
     const jump = get()[Controls.jump];
     const run = get()[Controls.run];
+
+    if(!alive){
+      setAnimation("die");
+      return
+    }
     setAnimation("idle");
 
     const curVel = rb.current.linvel();
@@ -100,6 +109,17 @@ export const Mario = () => {
       }
     }
 
+    if(speed.current > 4 && landed.current && !inTheAir.current){
+      stepSound.current.play();
+      stepSound.current.setVolume(0.2);
+    }
+
+      if(animation === "run"){
+        stepSound.current.playbackRate = 0.85
+      }
+      if(animation === "walk"){
+        stepSound.current.playbackRate = 0.75
+      }
     shoes.current.isRunning = false;
     // console.log(speed.current)
     if (goLeft) {
@@ -142,6 +162,7 @@ export const Mario = () => {
       jumpIsHeld.current = true;
       inTheAir.current = true;
       landed.current = false;
+      jumpSound.current.play();
     }
 
     if (!jump) {
@@ -207,6 +228,7 @@ export const Mario = () => {
         canSleep={false}
         ccd
         name="player"
+        friction={0}
         onCollisionEnter={(e) => {
           inTheAir.current = false;
           landed.current = true;
@@ -214,15 +236,28 @@ export const Mario = () => {
           const curVel = rb.current.linvel();
           curVel.y = 0;
           rb.current.setLinvel(curVel);
+          if(e.other.rigidBodyObject.name === "mushroom"){
+            setPlayerMushroom(true);
+          }
+          if(e.other.rigidBodyObject.name === "goomba" && playerMushroom){
+            setPlayerMushroom(false);
+          }
+          if(e.other.rigidBodyObject.name === "goomba" && !playerMushroom){
+            setAlive(false);
+          }
         }}
       >
         <group ref={groupRef} position={[0, 10, 0]}>
-          <Player animation={animation} rotation={rotation} />
-          <CapsuleCollider args={[0.4, 0.3]} />
+          <Player playerMushroom={playerMushroom} animation={animation} rotation={rotation} alive={alive}/>
+          <CapsuleCollider args={[playerMushroom ? 0.4 : 0.05, 0.3]} />
           <mesh ref={shoes} position={[0, -0.7,0]}>
             <boxGeometry args={[1, 1, 1]} />
             <meshBasicMaterial color="red" visible={false} />
           </mesh>
+          <PositionalAudio ref={jumpSound} url="/sounds/jump.wav" distance={1000} loop={false}  />
+          <PositionalAudio ref={stepSound} url="/sounds/step.wav" distance={1000} loop={false}  />
+
+
         </group>
       </RigidBody>
 

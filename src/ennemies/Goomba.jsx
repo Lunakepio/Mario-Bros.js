@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.2.16 .\Goomba.glb
 */
 
 import React, { useRef, useState, useEffect, useMemo } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import { useGLTF, useAnimations, PositionalAudio } from '@react-three/drei'
 import { BallCollider, RigidBody } from '@react-three/rapier'
 import { useFrame, useGraph } from '@react-three/fiber'
 import { useStore } from '../store'
@@ -25,6 +25,7 @@ export function Goomba({position}) {
   const [showGoomba, setShowGoomba] = useState(true)
   const [rotation, setRotation] = useState(false)
   const { shoes } = useStore();
+  const stompSound = useRef();
   
   useEffect(() => {
     actions["walk"].play();
@@ -57,6 +58,7 @@ useGSAP(() => {
 
   useGSAP(() => {
     if(!alive) {
+      stompSound.current.play();
       gsap.to(group.current.position, {
         y: -0.6,
         duration: 0.1,
@@ -70,9 +72,10 @@ useGSAP(() => {
         y:0.1,
         duration: 0.1
       })
-      
+      actions["walk"].setEffectiveTimeScale(0);
+      actions["walk"].stop();
+
     }
-    actions["walk"].setEffectiveTimeScale(0);
 
   }, [alive])
 
@@ -90,7 +93,7 @@ useGSAP(() => {
         }}
       >
         <mesh>
-          <boxGeometry args={[1, 0.5, 0.6]} />
+          <boxGeometry args={[1, 0.5, 0.9]} />
           <meshBasicMaterial color="red" visible={false} />
         </mesh>
       </RigidBody>
@@ -130,6 +133,7 @@ useGSAP(() => {
         </group>
       </group>
     </group>
+    <PositionalAudio ref={stompSound} url="/sounds/stomp.wav" distance={1000} loop={false}  />
     </RigidBody>
     </>
   )

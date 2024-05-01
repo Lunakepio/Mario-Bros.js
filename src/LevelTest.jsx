@@ -27,7 +27,7 @@ export function LevelTest() {
         dispose={null}
       >
         <QuestionBlock pos={[-49.359, 5.061, 0]} />
-        <QuestionBlock pos={[-44.181, 5.061, 0]} />
+        <QuestionBlock pos={[-44.181, 5.061, 0]} mushroom={true} />
         <QuestionBlock pos={[-42.198, 5.061, 0]} />
         <QuestionBlock pos={[-43.142, 9.123, 0]} />
         <QuestionBlock pos={[16.992, 5.072, 0]} />
@@ -35,7 +35,7 @@ export function LevelTest() {
         <QuestionBlock pos={[45.941, 5.087, 0]} />
         <QuestionBlock pos={[49.008, 5.087, 0]} />
         <QuestionBlock pos={[52.105, 5.087, 0]} />
-        <QuestionBlock pos={[49.044, 9.103, 0]} />
+        <QuestionBlock pos={[49.044, 9.103, 0]}  mushroom={true}/>
         <QuestionBlock pos={[70.562, 9.136, 0]} />
         <QuestionBlock pos={[69.555, 9.136, 0]} />
         <QuestionBlock pos={[111.768, 5.067, 0]} />

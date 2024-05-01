@@ -1,4 +1,4 @@
-import { KeyboardControls, OrbitControls } from "@react-three/drei";
+import { KeyboardControls, OrbitControls, Preload } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React, { useRef, useEffect, Suspense, useMemo } from "react";
 import { Experience } from "./Experience";
@@ -34,7 +34,10 @@ function App() {
               <Physics gravity={[0,-gravity, 0]} timeStep={"vary"}>
                 <Experience />
               </Physics>
+              
             </Suspense>
+            <Preload all />
+
           </Canvas>
         </KeyboardControls>
       </div>

@@ -9,4 +9,8 @@ export const useStore = create((set) => ({
   setMaterials: (materials) => set({ materials }),
   shoes: null,
   setShoes: (shoes) => set({ shoes }),
+  alive: true,
+  setAlive: (alive) => set({ alive }),
+  gameStarted: false,
+  setGameStarted: (gameStarted) => set({ gameStarted }),
 }));

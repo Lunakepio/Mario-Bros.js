@@ -26,10 +26,12 @@ export const Brick = ({ pos, geometry, material }) => {
         sensor
         position={pos}
         onIntersectionEnter={(e) => {
-          setIsHit(true);
+          if(e.other.rigidBodyObject.name === "player" && !isHit) {
+            setIsHit(true);
           group.current.visible = false;
             setShowEmptyBlock(true);
             rb.setEnabled(false);
+          }
         }}
       >
         <mesh>

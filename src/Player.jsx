@@ -12,7 +12,7 @@ import { Color, MeshStandardMaterial } from 'three'
 
 
 
-export function Player({ animation, rotation}) {
+export function Player({ playerMushroom, animation, rotation, alive}) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF('/Player.glb')
   const { actions } = useAnimations(animations, group)
@@ -29,6 +29,10 @@ const [powerUp, setPowerUp] = useState(false)
       timeScale.current = 1;
     } else {
       timeScale.current = 5;
+    }
+
+    if(animation === "die"){
+      timeScale.current = 3;
     }
   
     actions[animation]?.reset().fadeIn(0.2).play();
@@ -52,9 +56,19 @@ const [powerUp, setPowerUp] = useState(false)
       });
     }
   }, [rotation]);
+
+  useGSAP(() => {
+    if(!alive){
+      gsap.to(group.current.rotation, {
+        y: -Math.PI / 2,
+        duration: 0.3,
+        ease: "expo.inOut",
+      });
+    }
+  }, [alive]);
   return (
     <group ref={group} dispose={null}>
-      <group name="Player" position={[0,-.7, 0]}>
+      <group name="Player" position={[0,playerMushroom ? -0.7 : -0.35, 0]} scale={[1, playerMushroom ? 1 : 0.5, 1]}>
         <group name="Player_1" >
           <group name="Mario">
             <group name="AllRoot">
