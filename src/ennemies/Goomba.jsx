@@ -49,10 +49,10 @@ useGSAP(() => {
     });
   }
 }, [rotation]);
-  useFrame(() => {
+  useFrame((state,delta) => {
     if(!hitBox.current && !rb.current && !alive) return;
     hitBox.current.setTranslation({x: rb.current.translation().x, y: rb.current.translation().y + 0.7, z: rb.current.translation().z})
-    rb.current.setLinvel({x: rb.current.linvel().x, y: rb.current.linvel().y, z: rotation ? 2 : -2})
+    rb.current.setLinvel({x: rb.current.linvel().x, y: rb.current.linvel().y, z: rotation ? 2 * delta * 144 : -2 * delta * 144})
   })
   
 

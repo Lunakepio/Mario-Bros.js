@@ -94,7 +94,7 @@ export const Mario = () => {
       speed.current = MathUtils.lerp(
         speed.current,
         run ? maxSpeed : maxSpeed / 2,
-        0.02
+        0.02 * delta * 144
       );
       if (
         (goLeft && previousRotation.current === "right") ||
@@ -105,7 +105,7 @@ export const Mario = () => {
       }
     } else {
       if (!inTheAir.current) {
-        speed.current = MathUtils.lerp(speed.current, 0, 0.05);
+        speed.current = MathUtils.lerp(speed.current, 0, 0.05 * delta * 144);
       }
     }
 
@@ -195,14 +195,14 @@ export const Mario = () => {
       // setGravity(90);
     }
 
-    rb.current.setLinvel(vel);
+    rb.current.setLinvel({ x: vel.x * delta * 144, y: vel.y, z: vel.z * delta * 60});
     if (rb.current.translation().y < -20) {
       rb.current.setTranslation({ x: 0, y: 10, z: 0 });
     }
     camera.current.position.z = MathUtils.lerp(
       camera.current.position.z,
       rb.current.translation().z + 7,
-      0.04
+      0.04 * delta * 144
     );
 
     rb.current.setTranslation({
