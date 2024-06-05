@@ -1,4 +1,4 @@
-[![Link](https://raw.githubusercontent.com/Lunakepio/Mario-Bros.js/main/public/logo.png)](https://mario-bros-js-one.vercel.app/)
+[![Link](https://raw.githubusercontent.com/YoruKiwi/Mario-Bros.js/patch-1/public/logo.png)](https://mario-bros-js-one.vercel.app/)
 
 
 # Welcome to Mario Bros.js, a JavaScript/WebGL Mario Bros project!
